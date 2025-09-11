@@ -1,4 +1,5 @@
 import { chromeDevBlog } from "./bespoke/chrome-dev-blog.ts";
+import { prismaBlog } from "./bespoke/prisma-blog.ts";
 import { render } from "./feed.ts";
 
 const port = parseInt(Deno.env.get("PORT") ?? "", 10);
@@ -9,10 +10,14 @@ Deno.serve(
       return new Response("Method Not Allowed", { status: 405 });
     }
 
-    if (new URL(req.url).pathname !== "/bespoke/chrome-dev-blog.xml") {
-      return new Response("Not Found", { status: 404 });
+    const pathname = new URL(req.url).pathname;
+    if (pathname === "/bespoke/chrome-dev-blog.xml") {
+      return render(await chromeDevBlog());
+    }
+    if (pathname === "/bespoke/prisma-blog.xml") {
+      return render(await prismaBlog());
     }
 
-    return render(await chromeDevBlog());
+    return new Response("Not Found", { status: 404 });
   },
 );
