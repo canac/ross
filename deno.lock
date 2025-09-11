@@ -1,0 +1,16 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@zod/zod@4": "4.1.7"
+  },
+  "jsr": {
+    "@zod/zod@4.1.7": {
+      "integrity": "af22f76611c490511b3b44f3e008280f42f1ff21ff457428387d93e6914601cb"
+    }
+  },
+  "workspace": {
+    "dependencies": [
+      "jsr:@zod/zod@4"
+    ]
+  }
+}
