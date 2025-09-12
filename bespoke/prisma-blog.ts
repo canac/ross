@@ -10,6 +10,9 @@ const schema = z.object({
           title: z.string(),
           date: z.string(),
           slug: z.string(),
+          tags: z.array(z.object({
+            text: z.string(),
+          })).nullable(),
         }),
       ),
     }),
@@ -20,6 +23,7 @@ export const prismaBlog = async (): Promise<Feed> => {
   const res = await fetch("https://prisma.io/blog");
   const $ = cheerio.load(await res.text());
   const rawData = $("#__NEXT_DATA__").html();
+  console.log(JSON.parse(rawData ?? "{}"));
   const nextData = schema.parse(rawData ? JSON.parse(rawData) : {});
   return {
     title: "Prisma Blog",
@@ -30,6 +34,7 @@ export const prismaBlog = async (): Promise<Feed> => {
       title: post.title,
       date: new Date(post.date),
       url: `https://prisma.io/blog/${post.slug}`,
+      tags: post.tags?.map((tag) => tag.text),
     })),
   };
 };
