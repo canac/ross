@@ -27,7 +27,7 @@ const schema = z.tuple([
       z.unknown(),
       z.unknown(),
       z.unknown(),
-      z.array(z.string()),
+      z.array(z.string()).nullable(),
     ]).rest(z.unknown()),
   ),
 ]).rest(z.unknown());
@@ -66,8 +66,7 @@ export const chromeDevBlog = async (): Promise<Feed> => {
       title: entry[0],
       date: new Date(entry[5][0] * 1000),
       url: entry[6],
-      tags: entry[23]
-        .map((tag) => tag.split("-").at(-1))
+      tags: entry[23]?.map((tag) => tag.split("-").at(-1))
         .filter((tag) => typeof tag === "string"),
     })),
   };
