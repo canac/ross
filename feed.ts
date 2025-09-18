@@ -3,6 +3,7 @@ export interface Feed {
   description: string;
   url: string;
   items: FeedItem[];
+  etag?: string | null;
 }
 
 export interface FeedItem {
@@ -45,6 +46,7 @@ export const render = (feed: Feed): Response => {
   return new Response(body, {
     headers: {
       "Content-Type": "application/rss+xml",
+      ...(feed.etag && { "ETag": feed.etag }),
     },
   });
 };

@@ -23,7 +23,6 @@ export const prismaBlog = async (): Promise<Feed> => {
   const res = await fetch("https://www.prisma.io/blog");
   const $ = cheerio.load(await res.text());
   const rawData = $("#__NEXT_DATA__").html();
-  console.log(JSON.parse(rawData ?? "{}"));
   const nextData = schema.parse(rawData ? JSON.parse(rawData) : {});
   return {
     title: "Prisma Blog",
@@ -36,5 +35,6 @@ export const prismaBlog = async (): Promise<Feed> => {
       url: `https://www.prisma.io/blog/${post.slug}`,
       tags: post.tags?.map((tag) => tag.text),
     })),
+    etag: res.headers.get("ETag"),
   };
 };
