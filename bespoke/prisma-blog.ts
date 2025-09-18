@@ -20,7 +20,7 @@ const schema = z.object({
 });
 
 export const prismaBlog = async (): Promise<Feed> => {
-  const res = await fetch("https://prisma.io/blog");
+  const res = await fetch("https://www.prisma.io/blog");
   const $ = cheerio.load(await res.text());
   const rawData = $("#__NEXT_DATA__").html();
   console.log(JSON.parse(rawData ?? "{}"));
@@ -29,11 +29,11 @@ export const prismaBlog = async (): Promise<Feed> => {
     title: "Prisma Blog",
     description:
       "Guides, announcements, and articles about Prisma, ORMs, databases, and the data access layer.",
-    url: "https://prisma.io/blog",
+    url: "https://www.prisma.io/blog",
     items: nextData.props.pageProps.posts.map((post) => ({
       title: post.title,
       date: new Date(post.date),
-      url: `https://prisma.io/blog/${post.slug}`,
+      url: `https://www.prisma.io/blog/${post.slug}`,
       tags: post.tags?.map((tag) => tag.text),
     })),
   };
