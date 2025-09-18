@@ -9,7 +9,7 @@ export interface Feed {
 export interface FeedItem {
   title: string;
   url: string;
-  date: Date;
+  date?: Date;
   tags?: string[];
 }
 
@@ -22,12 +22,15 @@ const escape = (str: string): string =>
  */
 export const render = (feed: Feed): Response => {
   const items = feed.items.map((entry) => {
+    const pubDate = entry.date
+      ? `
+      <pubDate>${escape(entry.date.toUTCString())}</pubDate>`
+      : "";
     const tags = entry.tags?.map((tag) => `
       <category>${escape(tag)}</category>`) ?? [];
     return `
     <item>
-      <title>${escape(entry.title)}</title>
-      <pubDate>${escape(entry.date.toUTCString())}</pubDate>
+      <title>${escape(entry.title)}</title>${pubDate}
       <link>${escape(entry.url)}</link>
       <guid>${escape(entry.url)}</guid>${tags.join("")}
     </item>`;

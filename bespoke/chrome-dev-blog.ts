@@ -1,5 +1,6 @@
 import type { Feed } from "../feed.ts";
 import z from "@zod/zod";
+import { validateResponse } from "../lib/error.ts";
 
 const schema = z.tuple([
   z.array(
@@ -54,6 +55,8 @@ export const chromeDevBlog = async (): Promise<Feed> => {
     ]),
     method: "POST",
   });
+  validateResponse(res);
+
   const text = await res.text();
   const body = schema.parse(
     JSON.parse(text.startsWith(")]}'\n") ? text.slice(5) : text),

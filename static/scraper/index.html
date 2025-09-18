@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSS Scraper</title>
+    <link rel="stylesheet" href="/scraper/styles.css">
+  </head>
+  <body>
+    <main>
+      <h1>RSS Scraper</h1>
+      <p class="description">
+        Generate an RSS feed for publications that don't provide one by scraping
+        a page for the article links and titles.
+      </p>
+      <form action="/scraper/feed.xml">
+        <label>
+          <p class="label-title">Page URL</p>
+          <p class="label-description">
+            What is the URL of the publication that contains the item links?
+          </p>
+          <input
+            class="url-input"
+            name="url"
+            placeholder="https://example.com/blog"
+            required
+          />
+        </label>
+        <label>
+          <p class="label-title">Item selector</p>
+          <p class="label-description">
+            What CSS selector will select a list of article elements, each
+            containing exactly one article title and link?
+          </p>
+          <input
+            class="selector-input monospace"
+            name="itemSelector"
+            placeholder="div.article"
+            required
+          />
+        </label>
+        <label>
+          <p class="label-title">Title selector</p>
+          <p class="label-description">
+            What CSS selector will select the title element inside of an article
+            element?
+          </p>
+          <input
+            class="selector-input monospace"
+            name="titleSelector"
+            placeholder="h3.title"
+            required
+          />
+        </label>
+
+        <button type="submit">
+          Scrape!
+        </button>
+      </form>
+    </main>
+  </body>
+</html>

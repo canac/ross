@@ -1,6 +1,7 @@
 import type { Feed } from "../feed.ts";
 import * as cheerio from "cheerio/slim";
 import z from "@zod/zod";
+import { validateResponse } from "../lib/error.ts";
 
 const schema = z.object({
   props: z.object({
@@ -21,6 +22,8 @@ const schema = z.object({
 
 export const prismaBlog = async (): Promise<Feed> => {
   const res = await fetch("https://www.prisma.io/blog");
+  validateResponse(res);
+
   const $ = cheerio.load(await res.text());
   const rawData = $("#__NEXT_DATA__").html();
   const nextData = schema.parse(rawData ? JSON.parse(rawData) : {});

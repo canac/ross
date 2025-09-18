@@ -37,7 +37,6 @@ Deno.test("render RSS feed with items having 0, 1, and 3 tags", async () => {
       {
         title: "Item with one tag",
         url: "https://example.com/one-tag",
-        date: new Date("2024-01-02T00:00:00Z"),
         tags: ["tag"],
       },
       {
@@ -65,7 +64,6 @@ Deno.test("render RSS feed with items having 0, 1, and 3 tags", async () => {
     </item>
     <item>
       <title>Item with one tag</title>
-      <pubDate>Tue, 02 Jan 2024 00:00:00 GMT</pubDate>
       <link>https://example.com/one-tag</link>
       <guid>https://example.com/one-tag</guid>
       <category>tag</category>
@@ -83,4 +81,11 @@ Deno.test("render RSS feed with items having 0, 1, and 3 tags", async () => {
 </rss>
 `,
   );
+});
+
+Deno.test("render RSS feed with ETag header", () => {
+  const etag = '"test-etag-123"';
+  const response = render({ ...baseFeed, etag });
+
+  assertEquals(response.headers.get("ETag"), etag);
 });
