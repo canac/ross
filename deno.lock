@@ -5,6 +5,7 @@
     "jsr:@std/assert@1": "1.0.14",
     "jsr:@std/http@1": "1.0.12",
     "jsr:@std/internal@^1.0.10": "1.0.10",
+    "jsr:@std/semver@1": "1.0.3",
     "jsr:@zod/zod@4": "4.1.7",
     "npm:cheerio@1": "1.1.2",
     "npm:domelementtype@2": "2.3.0"
@@ -24,6 +25,9 @@
     },
     "@std/internal@1.0.10": {
       "integrity": "e3be62ce42cab0e177c27698e5d9800122f67b766a0bea6ca4867886cbde8cf7"
+    },
+    "@std/semver@1.0.3": {
+      "integrity": "7c139c6076a080eeaa4252c78b95ca5302818d7eafab0470d34cafd9930c13c8"
     },
     "@zod/zod@4.1.7": {
       "integrity": "af22f76611c490511b3b44f3e008280f42f1ff21ff457428387d93e6914601cb"
@@ -172,6 +176,7 @@
       "jsr:@hono/hono@4",
       "jsr:@std/assert@1",
       "jsr:@std/http@1",
+      "jsr:@std/semver@1",
       "jsr:@zod/zod@4",
       "npm:cheerio@1",
       "npm:domelementtype@2"
