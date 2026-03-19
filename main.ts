@@ -2,7 +2,6 @@ import { Hono } from "@hono/hono";
 import { serveStatic } from "@hono/hono/deno";
 import { render } from "./feed.ts";
 import { chromeDevBlog } from "./bespoke/chrome-dev-blog.ts";
-import { prismaBlog } from "./bespoke/prisma-blog.ts";
 import { releases } from "./npm/releases.ts";
 import { scrape } from "./scraper/scrape.ts";
 
@@ -12,11 +11,6 @@ app.get(
   "/bespoke/chrome-dev-blog.xml",
   async () => render(await chromeDevBlog()),
 );
-app.get(
-  "/bespoke/prisma-blog.xml",
-  async () => render(await prismaBlog()),
-);
-
 app.get(
   "/npm/:pkg{.+}/releases.xml",
   async (ctx) => render(await releases(ctx.req.param("pkg"))),
