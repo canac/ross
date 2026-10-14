@@ -4,7 +4,7 @@
   "description": "RSS feed tools",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
+    "dev": "wrangler dev ${PORT:+--port $PORT}",
     "deploy": "wrangler deploy",
     "types": "wrangler types",
     "fmt": "oxfmt --write .",
