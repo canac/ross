@@ -1,20 +1,13 @@
-import { Hono } from "@hono/hono";
-import { serveStatic } from "@hono/hono/deno";
-import { render } from "./feed.ts";
+import { Hono } from "hono";
 import { chromeDevBlog } from "./bespoke/chrome-dev-blog.ts";
+import { render } from "./feed.ts";
 import { releases } from "./npm/releases.ts";
 import { scrape } from "./scraper/scrape.ts";
 
 const app = new Hono();
 
-app.get(
-  "/bespoke/chrome-dev-blog.xml",
-  async () => render(await chromeDevBlog()),
-);
-app.get(
-  "/npm/:pkg{.+}/releases.xml",
-  async (ctx) => render(await releases(ctx.req.param("pkg"))),
-);
+app.get("/bespoke/chrome-dev-blog.xml", async () => render(await chromeDevBlog()));
+app.get("/npm/:pkg{.+}/releases.xml", async (ctx) => render(await releases(ctx.req.param("pkg"))));
 
 app.get("/scraper/feed.xml", async (c) => {
   const url = c.req.query("url");
@@ -39,7 +32,4 @@ app.get("/scraper/feed.xml", async (c) => {
   );
 });
 
-app.use("/*", serveStatic({ root: "./static" }));
-
-const port = parseInt(Deno.env.get("PORT") ?? "", 10) || undefined;
-Deno.serve({ port }, app.fetch);
+export default app;

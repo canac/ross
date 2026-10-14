@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import { type Feed, render } from "./feed.ts";
 
 const baseFeed: Feed = {
@@ -8,10 +9,10 @@ const baseFeed: Feed = {
   items: [],
 };
 
-Deno.test("render empty RSS feed", async () => {
+test("render empty RSS feed", async () => {
   const response = render(baseFeed);
 
-  assertEquals(
+  assert.equal(
     await response.text(),
     `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -25,7 +26,7 @@ Deno.test("render empty RSS feed", async () => {
   );
 });
 
-Deno.test("render RSS feed with items having 0, 1, and 3 tags", async () => {
+test("render RSS feed with items having 0, 1, and 3 tags", async () => {
   const response = render({
     ...baseFeed,
     items: [
@@ -48,7 +49,7 @@ Deno.test("render RSS feed with items having 0, 1, and 3 tags", async () => {
     ],
   });
 
-  assertEquals(
+  assert.equal(
     await response.text(),
     `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -83,9 +84,9 @@ Deno.test("render RSS feed with items having 0, 1, and 3 tags", async () => {
   );
 });
 
-Deno.test("render RSS feed with ETag header", () => {
+test("render RSS feed with ETag header", () => {
   const etag = '"test-etag-123"';
   const response = render({ ...baseFeed, etag });
 
-  assertEquals(response.headers.get("ETag"), etag);
+  assert.equal(response.headers.get("ETag"), etag);
 });

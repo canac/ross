@@ -1,7 +1,7 @@
+import { difference, type ReleaseType, tryParse } from "@std/semver";
+import z from "zod";
 import type { Feed } from "../feed.ts";
 import { validateResponse } from "../lib/error.ts";
-import z from "@zod/zod";
-import { difference, ReleaseType, tryParse } from "@std/semver";
 
 const schema = z.object({
   description: z.string().optional(),
@@ -9,10 +9,7 @@ const schema = z.object({
   time: z.record(z.string(), z.string()),
 });
 
-export const semverTag = (
-  prev: string | null,
-  version: string,
-): ReleaseType | null => {
+export const semverTag = (prev: string | null, version: string): ReleaseType | null => {
   const parsed = tryParse(version);
   if (!parsed) {
     return null;
@@ -38,21 +35,14 @@ export const releases = async (pkg: string): Promise<Feed> => {
   const times = data.time;
 
   const allVersions = Object.keys(data.versions).toReversed();
-  const stableVersions = allVersions.filter((version) =>
-    !tryParse(version)?.prerelease?.length
-  );
+  const stableVersions = allVersions.filter((version) => !tryParse(version)?.prerelease?.length);
   const prevVersions = new Map(
-    stableVersions.map((
-      version,
-      index,
-    ) => [version, stableVersions[index + 1]]),
+    stableVersions.map((version, index) => [version, stableVersions[index + 1]]),
   );
 
   const items = allVersions.map((version) => {
     const prevVersion = prevVersions.get(version);
-    const tag = prevVersion
-      ? semverTag(prevVersion ?? null, version)
-      : "prerelease";
+    const tag = prevVersion ? semverTag(prevVersion, version) : "prerelease";
     const time = times[version];
     return {
       title: version,

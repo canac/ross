@@ -13,9 +13,7 @@ export interface FeedItem {
   tags?: string[];
 }
 
-const escape = (str: string): string =>
-  str.replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;");
+const escape = (str: string): string => str.replaceAll("&", "&amp;").replaceAll("<", "&lt;");
 
 /**
  * Render an RSS feed as a Response
@@ -26,8 +24,11 @@ export const render = (feed: Feed): Response => {
       ? `
       <pubDate>${escape(entry.date.toUTCString())}</pubDate>`
       : "";
-    const tags = entry.tags?.map((tag) => `
-      <category>${escape(tag)}</category>`) ?? [];
+    const tags =
+      entry.tags?.map(
+        (tag) => `
+      <category>${escape(tag)}</category>`,
+      ) ?? [];
     return `
     <item>
       <title>${escape(entry.title)}</title>${pubDate}
@@ -49,7 +50,7 @@ export const render = (feed: Feed): Response => {
   return new Response(body, {
     headers: {
       "Content-Type": "application/rss+xml",
-      ...(feed.etag && { "ETag": feed.etag }),
+      ...(feed.etag && { ETag: feed.etag }),
     },
   });
 };

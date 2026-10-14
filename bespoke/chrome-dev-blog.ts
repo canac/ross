@@ -1,37 +1,41 @@
+import z from "zod";
 import type { Feed } from "../feed.ts";
-import z from "@zod/zod";
 import { validateResponse } from "../lib/error.ts";
 
-const schema = z.tuple([
-  z.array(
-    z.tuple([
-      z.string(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.tuple([z.number()]),
-      z.string(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.unknown(),
-      z.array(z.string()).nullable(),
-    ]).rest(z.unknown()),
-  ),
-]).rest(z.unknown());
+const schema = z
+  .tuple([
+    z.array(
+      z
+        .tuple([
+          z.string(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.tuple([z.number()]),
+          z.string(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.unknown(),
+          z.array(z.string()).nullable(),
+        ])
+        .rest(z.unknown()),
+    ),
+  ])
+  .rest(z.unknown());
 
 export const chromeDevBlog = async (): Promise<Feed> => {
   const res = await fetch("https://developer.chrome.com/_d/dynamic_content", {
@@ -58,9 +62,7 @@ export const chromeDevBlog = async (): Promise<Feed> => {
   validateResponse(res);
 
   const text = await res.text();
-  const body = schema.parse(
-    JSON.parse(text.startsWith(")]}'\n") ? text.slice(5) : text),
-  );
+  const body = schema.parse(JSON.parse(text.startsWith(")]}'\n") ? text.slice(5) : text));
   return {
     title: "Blog | Chrome for Developers Blog",
     description: "Latest news from the Chrome Developer Relations team",
@@ -69,8 +71,7 @@ export const chromeDevBlog = async (): Promise<Feed> => {
       title: entry[0],
       date: new Date(entry[5][0] * 1000),
       url: entry[6],
-      tags: entry[23]?.map((tag) => tag.split("-").at(-1))
-        .filter((tag) => typeof tag === "string"),
+      tags: entry[23]?.map((tag) => tag.split("-").at(-1)).filter((tag) => typeof tag === "string"),
     })),
   };
 };
