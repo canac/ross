@@ -14,10 +14,9 @@
     "types:check": "wrangler types --check"
   },
   "dependencies": {
+    "@lukeed/html": "^1.0.2",
     "@std/http": "jsr:^1.1.4",
     "@std/semver": "jsr:^1.0.8",
-    "cheerio": "^1.2.0",
-    "domelementtype": "^2.3.0",
     "hono": "^4.13.13",
     "zod": "^4.6.7"
   },

@@ -1,5 +1,4 @@
-import { load } from "cheerio";
-import { ElementType } from "domelementtype";
+import { parse } from "@lukeed/html";
 import { HTTPException } from "hono/http-exception";
 import type { Feed, FeedItem } from "../feed.ts";
 import { validateResponse } from "../lib/error.ts";
@@ -17,38 +16,37 @@ export async function scrape(url: string, selectors: Selectors): Promise<Feed> {
   const res = await fetch(url);
   validateResponse(res);
 
-  const text = await res.text();
-  const $ = load(text);
-  const items: FeedItem[] = $(selectors.items)
-    .map((_, item) => {
-      const $item = $(item);
-      const title = $item.find(selectors.title).text();
-      if (!title) {
-        return null;
-      }
+  const doc = parse(await res.text());
+  const items: FeedItem[] = doc.all(selectors.items).flatMap((item) => {
+    const title = item
+      .all(selectors.title)
+      .map((element) => element.text)
+      .join("");
+    if (!title) {
+      return [];
+    }
 
-      // Allow the item itself to be the link
-      const $link = item.type === ElementType.Tag && item.tagName === "a" ? $item : $item.find("a");
-      const link = $link.attr("href");
-      if (!link) {
-        return null;
-      }
+    // Allow the item itself to be the link
+    const link = (item.name === "a" ? item : item.find("a"))?.getAttr("href");
+    if (!link) {
+      return [];
+    }
 
-      return {
-        title: title.trim(),
-        // Resolve the potentially relative URL into an absolute URL
-        url: new URL(link, url).toString(),
-      };
-    })
-    .toArray()
-    .filter(Boolean);
+    return {
+      title: title.trim(),
+      // Resolve the potentially relative URL into an absolute URL
+      url: new URL(link, url).toString(),
+    };
+  });
 
   if (items.length === 0) {
     throw new HTTPException(404, { message: "No items found" });
   }
 
   return {
-    title: $("head > title").text() || "Scraped Feed",
+    // An empty <title> should fall back too
+    // oxlint-disable-next-line typescript/prefer-nullish-coalescing
+    title: doc.find("head > title, html > title")?.text || "Scraped Feed",
     description: `Scraped RSS feed for ${url}`,
     url,
     items,
