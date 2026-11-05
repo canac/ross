@@ -9,19 +9,19 @@ const app = new Hono();
 app.get("/bespoke/chrome-dev-blog.xml", async () => render(await chromeDevBlog()));
 app.get("/npm/:pkg{.+}/releases.xml", async (ctx) => render(await releases(ctx.req.param("pkg"))));
 
-app.get("/scraper/feed.xml", async (c) => {
-  const url = c.req.query("url");
-  const itemSelector = c.req.query("itemSelector");
-  const titleSelector = c.req.query("titleSelector");
+app.get("/scraper/feed.xml", async (context) => {
+  const url = context.req.query("url");
+  const itemSelector = context.req.query("itemSelector");
+  const titleSelector = context.req.query("titleSelector");
 
   if (!url) {
-    return c.text('Missing "url" query parameter', 400);
+    return context.text('Missing "url" query parameter', 400);
   }
   if (!itemSelector) {
-    return c.text('Missing "itemSelector" query parameter', 400);
+    return context.text('Missing "itemSelector" query parameter', 400);
   }
   if (!titleSelector) {
-    return c.text('Missing "titleSelector" query parameter', 400);
+    return context.text('Missing "titleSelector" query parameter', 400);
   }
 
   return render(
